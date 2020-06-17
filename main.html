@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Three Lines Demo</title>
+</head>
+<body>
+	<canvas id="canvas">
+		Your browser does not support HTML5
+	</canvas>
+	<script type="text/javascript" src="three.js/build/three.min.js"></script>
+	<script type="text/javascript">
+	//
+	// Setup requirements
+	// 
+
+		//variables
+		var width = 500;
+		var height = 100;
+		var lineSpacing = 5;
+
+		// Camera
+		var camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 500 );
+		camera.position.set( width/2, 3, height );
+		camera.lookAt( width/2, 0, 0 );
+
+		// Renderer
+		var renderer = new THREE.WebGLRenderer();
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		document.body.appendChild( renderer.domElement );
+
+		// Scene
+		var scene = new THREE.Scene();
+
+	// 
+	// Create Objects
+	// 
+
+	//
+	// X Lines object
+		// create a blue LineBasicMaterial
+		var material = new THREE.LineBasicMaterial( { color: 0x0000ff } );
+
+		// create the x line segments
+		var xpoints = [];
+		for (var y = height; y >= 0; y -=  lineSpacing) {
+			xpoints.push(new THREE.Vector3( 0 , y , 0 ) );
+			xpoints.push(new THREE.Vector3( width , y , 0 ) );
+		}
+
+		var geometry = new THREE.BufferGeometry().setFromPoints( xpoints );
+		var xlines = new THREE.LineSegments( geometry, material );
+
+	//
+	// Y Lines object
+		// create a blue LineBasicMaterial
+		var material = new THREE.LineBasicMaterial( { color: 0x0000ff } );
+
+		//create the y line segments
+		var ypoints = [];
+		for (var x = width; x >= 0; x-= lineSpacing) {
+			ypoints.push(new THREE.Vector3( x , 0 , 0 ) );
+			ypoints.push(new THREE.Vector3( x , height , 0 ) );
+		}
+
+		var geometry = new THREE.BufferGeometry().setFromPoints( ypoints );
+		var ylines = new THREE.LineSegments( geometry, material );
+
+	// 
+	// Horizon Line
+		var material = new THREE.LineBasicMaterial( { color: 0x0000ff } );
+
+		var horizonPoints = [];
+		horizonPoints.push(new THREE.Vector3( 0, 0, 0) );
+		horizonPoints.push(new THREE.Vector3( width, 0, 0 ) );
+		var geometry = new THREE.BufferGeometry().setFromPoints( horizonPoints );
+		var horisonLine = new THREE.LineSegments( geometry, material );
+
+	// 
+	// Add objects to Scene
+	// 
+		scene.add( xlines );
+		scene.add( ylines );
+		scene.add( horisonLine);
+
+	
+	// 
+	// Animations 
+	// 
+		function animate() {
+			requestAnimationFrame( animate );
+
+			moveLines();
+			rotateLines();
+			
+
+			renderer.render( scene, camera );
+		}
+		animate();
+
+
+	// 
+	// Lines rotation
+		function rotateLines() {
+			xlines.rotation.x = Math.PI/2;
+			ylines.rotation.x = Math.PI/2;
+			horisonLine.rotation.x = Math.PI/2;
+		}
+
+	//
+	// Move lines
+		function moveLines() {
+			if (xlines.position.z < 2*lineSpacing) {
+				xlines.position.z += 0.1;
+			} else {
+				xlines.position.z = 0;
+			}
+			
+		}
+
+		
+
+		
+
+	</script>
+</body>
+</html>
